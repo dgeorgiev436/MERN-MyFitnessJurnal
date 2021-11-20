@@ -1,0 +1,60 @@
+************** USERS ***************
+
+// @route    POST api/users
+// @desc     Register user
+// @access   Public
+
+************** Auth ***************
+
+// @route    GET api/auth
+// @desc     Get user by token
+// @access   Public
+
+// @route    POST api/auth
+// @desc     Log user in & get token
+// @access   Public
+
+************** Profile ***************
+
+// @route    GET api/profile/me
+// @desc     Get current user profile
+// @access   Private
+
+// @route    POST api/profile
+// @desc     Create or update profile
+// @access   Private
+
+// @route    GET api/profile/:userId
+// @desc     Get profile by user ID
+// @access   Public
+
+// @route    DELETE api/profile
+// @desc     Delete User And Profile
+// @access   Private
+
+************** WorkoutJurnal ***************
+
+// @route    POST api/profile/jurnal
+// @desc     Add Performance jurnal
+// @access   Private
+
+// @route    PUT api/profile/:jurnalId
+// @desc     Update performance jurnal by ID 
+// @access   Private
+
+// @route    GET api/profile/jurnal
+// @desc     GET all Performance jurnals of this profile
+// @access   Private
+
+// @route    GET api/profile/jurnal/:jurnalId
+// @desc     GET performance jurnal by ID
+// @access   Private
+
+// @route    POST api/profile/jurnal/:jurnalId
+// @desc     Add excersise data to specific performance jurnal
+// @access   Private
+
+// @route    GET api/profile/jurnal/:jurnalId/:excersiseId
+// @desc     Find an excersise from specific workout jurnal
+// @access   Private
+

@@ -1,0 +1,5 @@
+{
+	
+	"mongoURI": "mongodb+srv://Admin:admin@myfitnessjournal.0vgsh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+	"jwtSecret": "theSecretToken"
+}
