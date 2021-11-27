@@ -2,8 +2,19 @@ import {Form, Button, Container, Row, Col} from "react-bootstrap";
 import {Link} from "react-router-dom"
 import "./Login.css"
 import "bootstrap/dist/css/bootstrap.css"
+import {setAlert} from "../../actions/alertActions"
+import {connect} from "react-redux"
+import PropTypes from "prop-types"
 
-const Login = () => {
+
+const Login = ({setAlert}) => {
+	
+	const onSubmit = (event) => {
+		event.preventDefault();
+		console.log("CLICKED")
+		setAlert("Button clicked", "success")
+	}
+	
 	return(
 		<Container>
 			<Row className="text-center mb-5">
@@ -14,7 +25,7 @@ const Login = () => {
 			<Row>
 				<Col>
 					<div>
-						<Form>
+						<Form onSubmit={onSubmit}>
 							<Form.Group className="mb-3" controlId="formEmail">
 								<Form.Label>Email Address</Form.Label>
 								<Form.Control type="email" placeholder="Email Address" />
@@ -35,4 +46,8 @@ const Login = () => {
 	)
 }
 
-export default Login;
+Login.propTypes = {
+	setAlert: PropTypes.func.isRequired
+}
+
+export default connect(null, {setAlert} )(Login);

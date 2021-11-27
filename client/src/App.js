@@ -4,6 +4,7 @@ import NavigationBar from "./components/Layout/NavigationBar"
 import Landing from "./components/Layout/Landing";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
+import AlertComp from "./components/Layout/Alert"
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 // Redux
 import { Provider } from "react-redux";
@@ -14,6 +15,7 @@ const App = () => {
 	<Provider store={store}>
 		<Fragment>
 			<NavigationBar />
+			<AlertComp />
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Landing />}/>
