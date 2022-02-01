@@ -1,18 +1,28 @@
+import {useRef} from "react"
 import {Form, Button, Container, Row, Col} from "react-bootstrap";
-import {Link} from "react-router-dom"
+import {Link, Navigate} from "react-router-dom"
 import "./Login.css"
 import "bootstrap/dist/css/bootstrap.css"
 import {setAlert} from "../../actions/alertActions"
+import {loginUser} from "../../actions/authActions"
 import {connect} from "react-redux"
 import PropTypes from "prop-types"
 
 
-const Login = ({setAlert}) => {
+const Login = ({setAlert, loginUser, auth: {isAuthenticated} }) => {
 	
-	const onSubmit = (event) => {
+	const emailRef = useRef();
+	const passwordRef = useRef();
+	
+	const onSubmit = async(event) => {
 		event.preventDefault();
-		console.log("CLICKED")
-		setAlert("Button clicked", "success")
+		
+		loginUser(emailRef.current.value, passwordRef.current.value)
+		
+	}
+	
+	if(isAuthenticated){
+		return <Navigate replace to="/" />
 	}
 	
 	return(
@@ -28,12 +38,12 @@ const Login = ({setAlert}) => {
 						<Form onSubmit={onSubmit}>
 							<Form.Group className="mb-3" controlId="formEmail">
 								<Form.Label>Email Address</Form.Label>
-								<Form.Control type="email" placeholder="Email Address" />
+								<Form.Control ref={emailRef} type="email" placeholder="Email Address" />
 							</Form.Group>
 
 							<Form.Group className="mb-3" controlId="formPassword">
 								<Form.Label>Password</Form.Label>
-								<Form.Control type="password" placeholder="Password" />
+								<Form.Control ref={passwordRef} type="password" placeholder="Password" />
 							</Form.Group>
 
 							<Button variant="primary" className="my-2" type="submit">Login</Button>
@@ -47,7 +57,13 @@ const Login = ({setAlert}) => {
 }
 
 Login.propTypes = {
-	setAlert: PropTypes.func.isRequired
+	setAlert: PropTypes.func.isRequired,
+	loginUser: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired
 }
+	
+const mapStateToProps = state => ({
+	auth: state.authReducer
+})
 
-export default connect(null, {setAlert} )(Login);
+export default connect(mapStateToProps, {setAlert, loginUser} )(Login);

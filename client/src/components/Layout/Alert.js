@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { connect } from "react-redux"
 import "bootstrap/dist/css/bootstrap.css"
 import {Alert} from "react-bootstrap";
@@ -12,9 +11,6 @@ const AlertComp = ({alerts}) => alerts !== null && alerts.length > 0 && alerts.m
 
 
 
-Alert.propTypes = {
-	alerts: PropTypes.array.isRequired
-}
 
 const mapStateToProps = state => ({
 	alerts: state.alertReducer
