@@ -1,6 +1,6 @@
 # MERN-MyFitnessJurnal
 
-This is an ongoing MERN stack single-page web application to help fitness enthusiast track their progress. The application includes authentication, authorization, profiles and RESTful routing.
+This is an ongoing MERN stack single-page web application to help fitness enthusiast track their progress in the gym. The application includes authentication, authorization, profiles and RESTful routing.
 
 ## Technology Stack
 
