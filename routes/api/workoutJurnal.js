@@ -8,13 +8,47 @@ const mongoose = require('mongoose');
 const User = require("../../models/User");
 const Profile = require("../../models/Profile");
 
-// @route    POST api/profile/jurnal
-// @desc     Add Workout jurnal
+// @route    POST api/profile/monthlyPerformance
+// @desc     Add monthly performance where workouts through the month will be recorded
 // @access   Private
-router.post("/jurnal",
+router.post("/monthlyPerformance",
+		check("splitName", "Training split name is required").notEmpty(),
+		check("year", "Year is required").notEmpty(),
+		check("month", "Month is required").notEmpty(),	   
+	auth, async(req,res) => {
+	
+	const errors = validationResult(req);
+	
+	if(!errors.isEmpty()){
+		 return res.status(400).json({ errors: errors.array() });
+	}
+	
+	const {splitName, year, month} = req.body;
+	
+	const input = {splitName, year, month}
+	
+	try{
+		
+		const profile = await Profile.findOne({user: req.user.id})
+		
+		profile.performanceTracker.unshift(input);
+		
+		await profile.save();
+		
+		res.json(profile);
+		
+	}catch(err){
+		console.error(err.message);
+		res.status(500).send("Server Error");
+	}
+	
+})
+
+// @route    POST api/profile/:monthlyPerformanceId/workout
+// @desc     Add Workout to a performance tracker
+// @access   Private
+router.post("/monthlyPerformance/:monthlyPerformanceId/workout",
 	check("workoutName", "Workout name is required").notEmpty(),
-	check("year", "Year is required").notEmpty(),
-	check("month", "Month is required").notEmpty(),
 	auth, async(req,res) => {
 	
 		const errors = validationResult(req);
@@ -23,11 +57,14 @@ router.post("/jurnal",
 			 return res.status(400).json({ errors: errors.array() });
 		}
 	
-		const {workoutName, year, month} = req.body
-		const performanceTracker = {workoutName, year, month}
+		const {workoutName} = req.body
+		const workout = {workoutName}
 		try{
 			const profile = await Profile.findOne({user: req.user.id})
-			profile.performanceTracker.unshift(performanceTracker);
+			
+			const jurnal = profile.performanceTracker.find(jurnal => jurnal._id.toString() === req.params.monthlyPerformanceId )
+			
+			jurnal.workouts.unshift(workout);
 			
 			await profile.save();
 			
@@ -39,13 +76,13 @@ router.post("/jurnal",
 		}
 });
 
-// @route    PUT api/profile/jurnal/:jurnalId
+// @route    PUT api/profile/monthlyPerformace/:monthlyPerformanceId
 // @desc     Update workout jurnal by ID 
 // @access   Private
-router.put("/jurnal/:jurnalId", auth,
-	check("workoutName", "Workout name is required").notEmpty(),
+router.put("/monthlyPerformace/:monthlyPerformanceId", auth,
+	check("splitName", "Training split name is required").notEmpty(),
 	check("year", "Year is required").notEmpty(),
-	check("month", "Month is required").notEmpty(),
+	check("month", "Month is required").notEmpty(),	   
 	async(req,res) => {
 	
 	const errors = validationResult(req);
@@ -54,9 +91,9 @@ router.put("/jurnal/:jurnalId", auth,
 		 return res.status(400).json({ errors: errors.array() });
 	}
 // 	Get user input
-	const {workoutName, year, month} = req.body;
+	const {splitName, year, month} = req.body;
 // 	Turn the query string performanceId to ObjectId data type
-	const objectId = mongoose.Types.ObjectId(req.params.jurnalId)
+	const objectId = mongoose.Types.ObjectId(req.params.monthlyPerformanceId)
 	try{
 // 		Find and update with mongoDb query
 		const profile = await Profile.findOneAndUpdate(
@@ -64,7 +101,7 @@ router.put("/jurnal/:jurnalId", auth,
 				user: req.user.id ,"performanceTracker._id" : objectId
 			}, 
 			{
-				$set: {"performanceTracker.$.workoutName": workoutName, "performanceTracker.$.year": year, "performanceTracker.$.month": month}
+				$set: {"performanceTracker.$.splitName": splitName, "performanceTracker.$.year": year, "performanceTracker.$.month": month}
 			},
 			{
 				new: true
@@ -83,11 +120,12 @@ router.put("/jurnal/:jurnalId", auth,
 })
 
 
-// @route    GET api/profile/jurnal
-// @desc     GET all workout jurnals of this profile
+// @route    GET api/profile/monthlyPerformace/all
+// @desc     GET all monthly workout jurnals of this profile
 // @access   Private
-router.get("/jurnal", auth, async(req,res) => {
+router.get("/monthlyPerformace/all", auth, async(req,res) => {
 	try{
+		
 		const profile = await Profile.findOne({user: req.user.id});
 		
 		if(!profile) {
@@ -102,36 +140,35 @@ router.get("/jurnal", auth, async(req,res) => {
 	}
 });
 
-// @route    GET api/profile/jurnal/:jurnalId
+// @route    GET api/profile/monthlyPerformace/:monthlyPerformaceId/excersises
 // @desc     Get all excersises data from specific jurnal
 // @access   Private
-router.get("/jurnal/:jurnalId/excersises", auth, async(req,res) => {
-	try{
-		const profile = await Profile.findOne({user: req.user.id});
+// router.get("/monthlyPerformace/:monthlyPerformaceId/excersises", auth, async(req,res) => {
+// 	try{
+// 		const profile = await Profile.findOne({user: req.user.id});
 		
-		const jurnal = profile.performanceTracker.find(jurnal => jurnal._id.toString() === req.params.jurnalId);
+// 		const jurnal = profile.performanceTracker.find(jurnal => jurnal._id.toString() === req.params.monthlyPerformaceId);
 		
-		if(!jurnal) {
-			return res.status(400).json({msg: "No workout jurnal found"});
-		}
+// 		if(!jurnal) {
+// 			return res.status(400).json({msg: "No workout jurnal found"});
+// 		}
 		
-		console.log("done")
-		res.json(jurnal.excersises);
+// 		res.json(jurnal.excersises);
 		
-	}catch(err){
-		console.error(err.message);
-		res.status(500).send("Server Error");
-	}
-})
+// 	}catch(err){
+// 		console.error(err.message);
+// 		res.status(500).send("Server Error");
+// 	}
+// })
 
-// @route    GET api/profile/jurnal/:jurnalId
-// @desc     GET jurnal by ID
+// @route    GET api/profile/monthlyPerformaceId/:monthlyPerformaceId
+// @desc     GET monthly performance jurnal by ID
 // @access   Private
-router.get("/jurnal/:jurnalId", auth, async(req,res) => {
+router.get("/monthlyPerformace/:monthlyPerformaceId", auth, async(req,res) => {
 
 	try{
 		const profile = await Profile.findOne({user: req.user.id});
-		const jurnal = profile.performanceTracker.find(tracker => tracker._id.equals(req.params.jurnalId))
+		const jurnal = profile.performanceTracker.find(tracker => tracker._id.equals(req.params.monthlyPerformaceId))
 		
 		if(!jurnal) {
 			return res.status(400).json({msg: "No jurnal found"});
@@ -145,14 +182,12 @@ router.get("/jurnal/:jurnalId", auth, async(req,res) => {
 	}
 })
 
-// @route    POST api/profile/jurnal/:jurnalId
-// @desc     Add excersise data to specific jurnal
+// @route    POST api/profile/monthlyPerformace/:monthlyPerformaceId/:workoutId/excersise
+// @desc     Add excersise data to specific monthly excersise jurnal
 // @access   Private
-router.post("/jurnal/:jurnalId", auth,
+router.post("/monthlyPerformace/:monthlyPerformaceId/:workoutId/excersise", auth,
 	check("excersiseName", "Excersise name is required").notEmpty(),
 	check("sets", "Atleast 1 set is required").isLength({min: 1}),
-	// check("weight", "Please enter weight used").notEmpty(),
-	// check("reps", "Please enter a number of reps").notEmpty(),
 	async(req,res) => {
 	
 	const errors = validationResult(req);
@@ -174,8 +209,9 @@ router.post("/jurnal/:jurnalId", auth,
 	
 	try{
 		const profile = await Profile.findOne({user: req.user.id});
-		const excersiseJurnal = profile.performanceTracker.find(jurnal => jurnal._id.equals(req.params.jurnalId));
-		excersiseJurnal.excersises.unshift(excersiseObject);	
+		const excersiseJurnal = profile.performanceTracker.find(jurnal => jurnal._id.equals(req.params.monthlyPerformaceId));
+		const workout = excersiseJurnal.workouts.find(workout => workout._id.equals(req.params.workoutId))
+		workout.excersises.unshift(excersiseObject);	
 		
 		await profile.save();
 		
@@ -190,40 +226,40 @@ router.post("/jurnal/:jurnalId", auth,
 // @route    GET api/profile/jurnal/:jurnalId/:excersiseId
 // @desc     Find an excersise by ID from specific workout jurnal
 // @access   Private
-router.get("/jurnal/:jurnalId/:excersiseId", auth, async(req,res) => {
-	try{
-		const profile = await Profile.findOne({user: req.user.id});
+// router.get("/jurnal/:jurnalId/:excersiseId", auth, async(req,res) => {
+// 	try{
+// 		const profile = await Profile.findOne({user: req.user.id});
 		
-		const performanceJurnal = profile.performanceTracker.find(jurnal => jurnal._id.equals(req.params.jurnalId));
+// 		const performanceJurnal = profile.performanceTracker.find(jurnal => jurnal._id.equals(req.params.jurnalId));
 		
-		if(!performanceJurnal) {
-			return res.status(400).json({msg: "No jurnal found"});
-		}
+// 		if(!performanceJurnal) {
+// 			return res.status(400).json({msg: "No jurnal found"});
+// 		}
 		
-		const excersise = performanceJurnal.excersises.find(excersise => excersise._id.equals(req.params.excersiseId));
+// 		const excersise = performanceJurnal.excersises.find(excersise => excersise._id.equals(req.params.excersiseId));
 		
-		if(!excersise) {
-			return res.status(400).json({msg: "No excersise found"});
-		}
+// 		if(!excersise) {
+// 			return res.status(400).json({msg: "No excersise found"});
+// 		}
 		
-		res.json(excersise)
-	}catch(err){
-		console.error(err.message);
-		res.status(500).send("Server Error");
-	}
-});
+// 		res.json(excersise)
+// 	}catch(err){
+// 		console.error(err.message);
+// 		res.status(500).send("Server Error");
+// 	}
+// });
 
 
 
 // @route    DELETE api/profile/jurnal/:jurnalId
 // @desc     Find a jurnal by ID and delete it
 // @access   Private
-router.delete("/jurnal/:jurnalId", auth, async(req,res) => {
+router.delete("/monthlyPerformace/:monthlyPerformaceId", auth, async(req,res) => {
 	
 	try{
 		const profile = await Profile.findOne({user: req.user.id});
 		
-		profile.performanceTracker = profile.performanceTracker.filter(jurnal => jurnal._id.toString() !== req.params.jurnalId );
+		profile.performanceTracker = profile.performanceTracker.filter(jurnal => jurnal._id.toString() !== req.params.monthlyPerformaceId );
 		
 		await profile.save();
 		

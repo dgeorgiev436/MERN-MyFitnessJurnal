@@ -27,15 +27,21 @@ const ProfileSchema = new Schema({
 	},
 	performanceTracker: [
 		{
+		splitName: {
+			type: String,
+			required: true
+		},
+		year: {
+			type: String,
+			required: true
+		},
+		month: {
+			type: String,
+			required: true
+		},
+		workouts: [
+		{
 			workoutName: {
-				type: String,
-				required: true
-			},
-			year: {
-				type: String,
-				required: true
-			},
-			month: {
 				type: String,
 				required: true
 			},
@@ -64,6 +70,9 @@ const ProfileSchema = new Schema({
 			]
 		}
 	]
+	}
+	]
+	
 })
 
 const Profile = mongoose.model("profile", ProfileSchema);
