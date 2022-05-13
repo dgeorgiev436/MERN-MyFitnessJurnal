@@ -1,29 +1,25 @@
 import {connect} from "react-redux"
 import PropTypes from "prop-types"
-import {getAllWorkoutJurnals} from "../../actions/profileActions"
-import {useEffect} from "react"
 
-const Jurnal = ({getAllWorkoutJurnals}) => {
+const Jurnal = ({profileReducer: {profile, loading}}) => {
 	
-	useEffect(() => {
-		getAllWorkoutJurnals()
-	}, [ getAllWorkoutJurnals ] )
-	
+
 	return(
 		<div>
 			<h1>Jurnal page</h1>
 			<h2>sd</h2>
+			<p>about: {profile.about}</p>
 		</div>
 	)
 }
 
 const mapStateToProps = state => ({
-	
+	profileReducer: state.profileReducer
 })
 
 Jurnal.propTypes = {
-	getAllWorkoutJurnals: PropTypes.func.isRequired
+	profileReducer: PropTypes.object.isRequired
 }
 
 
-export default connect(mapStateToProps, {getAllWorkoutJurnals})(Jurnal);
+export default connect(mapStateToProps)(Jurnal);
