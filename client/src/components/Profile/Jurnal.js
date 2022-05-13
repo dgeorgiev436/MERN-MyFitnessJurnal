@@ -12,6 +12,7 @@ const Jurnal = ({getAllWorkoutJurnals}) => {
 	return(
 		<div>
 			<h1>Jurnal page</h1>
+			<h2>sd</h2>
 		</div>
 	)
 }
