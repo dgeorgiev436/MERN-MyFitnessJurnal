@@ -1,12 +1,11 @@
 import {getCurrentProfile, deleteProfileAndUser} from "../../actions/profileActions"
 import { logoutUser } from "../../actions/authActions"
 import "bootstrap/dist/css/bootstrap.css"
-import {useEffect} from "react"
+import {useEffect, useState} from "react"
 import {connect} from "react-redux"
 import PropTypes from "prop-types"
 import {Link} from "react-router-dom"
 import Notification from "../UI/Notification"
-import {useState} from "react"
 
 const Profile = ({getCurrentProfile, logoutUser, deleteProfileAndUser, authReducer: { userLoading, user }, profileReducer: {profile, loading}}) => {
 	

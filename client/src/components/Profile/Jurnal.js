@@ -1,7 +1,13 @@
 import {connect} from "react-redux"
 import PropTypes from "prop-types"
+import {getAllWorkoutJurnals} from "../../actions/profileActions"
+import {useEffect} from "react"
 
-const Jurnal = () => {
+const Jurnal = ({getAllWorkoutJurnals}) => {
+	
+	useEffect(() => {
+		getAllWorkoutJurnals()
+	}, [ getAllWorkoutJurnals ] )
 	
 	return(
 		<div>
@@ -10,5 +16,13 @@ const Jurnal = () => {
 	)
 }
 
+const mapStateToProps = state => ({
+	
+})
 
-export default Jurnal;
+Jurnal.propTypes = {
+	getAllWorkoutJurnals: PropTypes.func.isRequired
+}
+
+
+export default connect(mapStateToProps, {getAllWorkoutJurnals})(Jurnal);

@@ -1,5 +1,5 @@
 import axios from "axios"
-import {GET_PROFILE, PROFILE_ERROR, DELETE_PROFILE} from "./types"
+import {GET_PROFILE, PROFILE_ERROR, DELETE_PROFILE, GET_JURNALS, JURNALS_ERROR} from "./types"
 import {setAlert} from "./alertActions"
 
 
@@ -83,4 +83,29 @@ export const deleteProfileAndUser = () => async dispatch => {
 		
 		dispatch(setAlert('Failed to Update Profile', 'danger'));
 	}
+}
+
+// GET ALL MONTHLY WORKOUT JURNALS FOR THE PROFILE
+export const getAllWorkoutJurnals = () => async dispatch => {
+	
+	try{
+		
+		const res = await axios.get("/api/profile/monthlyPerformace/all");
+		
+		dispatch({
+			type: GET_JURNALS,
+			payload: res.data
+		})
+		
+	}catch(err){
+		
+		dispatch({
+			type: JURNALS_ERROR,
+			payload: { msg: err.response.statusText, status: err.response.status }
+		})
+		
+		dispatch(setAlert('Failed to Update Profile', 'danger'));
+		
+	}
+	
 }

@@ -44,7 +44,7 @@ router.post("/monthlyPerformance",
 	
 })
 
-// @route    POST api/profile/:monthlyPerformanceId/workout
+// @route    POST api/profile/monthlyPerformance/:monthlyPerformanceId/workout
 // @desc     Add Workout to a performance tracker
 // @access   Private
 router.post("/monthlyPerformance/:monthlyPerformanceId/workout",
@@ -132,7 +132,7 @@ router.get("/monthlyPerformace/all", auth, async(req,res) => {
 			return res.status(400).json({msg: "There is no profile for this user"});
 		}
 		
-		res.json(profile.performanceTracker);
+		res.json(profile);
 		
 	}catch(err){
 		console.error(err.message);
