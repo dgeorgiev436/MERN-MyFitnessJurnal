@@ -1,4 +1,4 @@
-import {GET_PROFILE, PROFILE_ERROR,DELETE_PROFILE, GET_JURNALS} from "../actions/types"
+import {GET_PROFILE, PROFILE_ERROR,DELETE_PROFILE} from "../actions/types"
 
 
 const initialState = {
@@ -17,8 +17,6 @@ const profileReducer = (state = initialState, action) => {
 			return {...state, profile: null, loading: true, error: payload}
 		case DELETE_PROFILE:
 			return {...state, profile: null, loading: true}
-		case GET_JURNALS:
-			return {...state, profile: payload, loading: false}
 		default:
 			return state;
 	}

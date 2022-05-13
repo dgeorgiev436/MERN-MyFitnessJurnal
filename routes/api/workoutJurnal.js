@@ -123,22 +123,22 @@ router.put("/monthlyPerformace/:monthlyPerformanceId", auth,
 // @route    GET api/profile/monthlyPerformace/all
 // @desc     GET all monthly workout jurnals of this profile
 // @access   Private
-router.get("/monthlyPerformace/all", auth, async(req,res) => {
-	try{
+// router.get("/monthlyPerformace/all", auth, async(req,res) => {
+// 	try{
 		
-		const profile = await Profile.findOne({user: req.user.id});
+// 		const profile = await Profile.findOne({user: req.user.id});
 		
-		if(!profile) {
-			return res.status(400).json({msg: "There is no profile for this user"});
-		}
+// 		if(!profile) {
+// 			return res.status(400).json({msg: "There is no profile for this user"});
+// 		}
 		
-		res.json(profile);
+// 		res.json(profile);
 		
-	}catch(err){
-		console.error(err.message);
-		res.status(500).send("Server Error");
-	}
-});
+// 	}catch(err){
+// 		console.error(err.message);
+// 		res.status(500).send("Server Error");
+// 	}
+// });
 
 // @route    GET api/profile/monthlyPerformace/:monthlyPerformaceId/excersises
 // @desc     Get all excersises data from specific jurnal

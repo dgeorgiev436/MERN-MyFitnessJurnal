@@ -7,7 +7,7 @@ import Register from "./components/Auth/Register";
 import AlertComp from "./components/Layout/Alert"
 import Profile from "./components/Profile/Profile"
 import CreateUpdateProfile from "./components/Profile/CreateUpdateProfile"
-import Jurnal from "./components/Profile/Jurnal"
+import Jurnals from "./components/Profile/Jurnals"
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import PrivateRoute from "./components/Routing/PrivateRoute"
 // Redux
@@ -28,7 +28,8 @@ const App = () => {
 						<Route path="/register" element={<Register />}/>
 						<Route path="/profile" element={<PrivateRoute> <Profile /> </PrivateRoute>}></Route>
 						<Route path="/update-profile" element={<PrivateRoute> <CreateUpdateProfile /> </PrivateRoute>}></Route>
-						<Route path="/jurnal" element={<PrivateRoute> <Jurnal /> </PrivateRoute>}></Route>
+						<Route path="/jurnal" element={<PrivateRoute> <Jurnals /> </PrivateRoute>}></Route>
+						<Route path="/jurnal/:jurnalId" element={<PrivateRoute> <Jurnals /> </PrivateRoute>}></Route>
 					</Routes>
 			</Router>
 		</Fragment>
